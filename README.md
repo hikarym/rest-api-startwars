@@ -2,6 +2,10 @@
 
 Project to apply TDD
 
+## Design of Rest API
+
+![Design Rest API - by womakerscode](design-rest-api.png) 
+
 ## Technologies
 - Java 11
 - SpringBoot 2.6.5
