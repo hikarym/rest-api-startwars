@@ -2,16 +2,23 @@ package com.bootcampjava.starwars.model;
 
 public class Jedi {
 
-    private int id;
+    private Integer id;
     private String name;
     private int strength;
     private int version;
 
-    public Jedi(int id, String name, int strength, int version) {
+    public Jedi() {}
+
+    public Jedi(Integer id, String name, int strength, int version) {
         this.id = id;
         this.name = name;
         this.strength = strength;
         this.version = version;
+    }
+
+    public Jedi(String name, int strength) {
+        this.name = name;
+        this.strength = strength;
     }
 
     public int getId() {
@@ -30,7 +37,7 @@ public class Jedi {
         return version;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
