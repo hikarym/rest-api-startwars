@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface JediRepository {
 
-    Optional<Jedi> findById();
+    Optional<Jedi> findById(Integer id);
 
     List<Jedi> findAll();
 
@@ -15,7 +15,5 @@ public interface JediRepository {
 
     Jedi save(Jedi jedi);
 
-    boolean delete(int id);
-
-
+    boolean delete(Integer id);
 }
