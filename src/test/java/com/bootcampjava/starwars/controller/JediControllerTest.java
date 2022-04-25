@@ -154,6 +154,20 @@ public class JediControllerTest {
     }
 
     // TODO: Teste do PUT com erro - not found
+    @Test
+    @DisplayName("PUT /jedi/1 - Not Found")
+    void testJediPutNotFound() throws Exception {
+
+        Jedi putJedi = new Jedi("Yoda", 100);
+        Mockito.doReturn(Optional.empty()).when(jediService).findById(1);
+
+        mockMvc.perform(put("/jedi/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.IF_MATCH, 1)
+                        .content(asJsonString(putJedi)))
+
+                .andExpect(status().isNotFound());
+    }
 
     // TODO: Teste do delete com sucesso
 
