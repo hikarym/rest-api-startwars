@@ -24,7 +24,7 @@ public class JediController {
     }
 
     @GetMapping("/jedi/{id}")
-    public ResponseEntity<?> getJedi(@PathVariable int id) {
+    public ResponseEntity<?> getJedi(@PathVariable Integer id) {
 
         return jediService.findById(id)
                 .map(jedi -> {
