@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -43,6 +45,29 @@ public class JediServiceTest {
     }
 
     // TODO: Criar teste de erro NOT FOUND
+    @Test
+    @DisplayName("Test findById Not Found")
+    void testFindByIdNotFound() {
+
+        Mockito.doReturn(Optional.empty()).when(jediRepository).findById(1);
+
+        Optional<Jedi> returnedJedi = jediService.findById(1);
+
+        Assertions.assertFalse(returnedJedi.isPresent(), "Jedi nao fo encontrado como precisava ser");
+    }
 
     // TODO: Criar um teste pro findAll();
+    @Test
+    @DisplayName("Test findAll")
+    void testFindAll() {
+
+        Jedi mockJedi = new Jedi(1, "Jedi 1", 10, 1);
+        Jedi mockJedi2 = new Jedi(2, "Jedi 2", 15, 3);
+        Mockito.doReturn(Arrays.asList(mockJedi, mockJedi2)).when(jediRepository).findAll();
+
+        // Execute the service call
+        List<Jedi> jedis = jediService.findAll();
+
+        Assertions.assertEquals(2, jedis.size(), "Jedis de mesma forca encontrados");
+    }
 }
