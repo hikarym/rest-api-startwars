@@ -136,6 +136,22 @@ public class JediControllerTest {
     }
 
     // TODO: Teste do PUT com uma versao igual da ja existente - deve retornar um conflito
+    @Test
+    @DisplayName("PUT /jedi/1 - Version Mismatch")
+    void testJediPutVersionMismatch() throws Exception {
+
+        Jedi putJedi = new Jedi("Luke Skywalker", 30);
+        Jedi mockJedi = new Jedi(1, "Luke Skywalker", 30, 2);
+        Mockito.doReturn(Optional.of(mockJedi)).when(jediService).findById(1);
+        Mockito.doReturn(true).when(jediService).update(Mockito.any());
+
+        mockMvc.perform(put("/jedi/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.IF_MATCH, 1)
+                        .content(asJsonString(putJedi)))
+
+                .andExpect(status().isConflict());
+    }
 
     // TODO: Teste do PUT com erro - not found
 
