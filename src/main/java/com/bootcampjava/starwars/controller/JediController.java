@@ -92,4 +92,21 @@ public class JediController {
 
     }
 
+    @DeleteMapping("/jedi/{id}")
+    public ResponseEntity<?> deleteJedi(@PathVariable Integer id) {
+
+        logger.info("Deleting Jedi with ID {}", id);
+
+        // Get the existing product
+        Optional<Jedi> existingJedi = jediService.findById(id);
+
+        return existingJedi.map(j -> {
+            if (jediService.delete(j.getId())) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
 }

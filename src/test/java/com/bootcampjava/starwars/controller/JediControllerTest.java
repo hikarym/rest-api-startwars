@@ -170,13 +170,44 @@ public class JediControllerTest {
     }
 
     // TODO: Teste do delete com sucesso
+    @Test
+    @DisplayName("DELETE /jedi/1 - Success")
+    void testJediDeleteSuccess() throws Exception {
+
+        Jedi mockJedi = new Jedi(1, "Jedi name", 10, 1);
+
+        Mockito.doReturn(Optional.of(mockJedi)).when(jediService).findById(1);
+        Mockito.doReturn(true).when(jediService).delete(1);
+
+        mockMvc.perform(delete("/jedi/{id}", 1))
+                .andExpect(status().isOk());
+    }
+
 
     // TODO: Teste do delete com erro - deletar um id ja deletado
+    @Test
+    @DisplayName("DELETE /jedi/1 - Not Found")
+    void testJediDeleteNotFound() throws Exception {
+
+        Mockito.doReturn(Optional.empty()).when(jediService).findById(1);
+
+        mockMvc.perform(delete("/jedi/{id}", 1))
+                .andExpect(status().isNotFound());
+    }
 
     // TODO: Teste do delete com erro  - internal server error
+    @Test
+    @DisplayName("DELETE /jedi/1 - Failure")
+    void testJediDeleteFailure() throws Exception {
 
+        Jedi mockJedi = new Jedi(1, "Jedi Name", 10, 1);
 
+        Mockito.doReturn(Optional.of(mockJedi)).when(jediService).findById(1);
+        Mockito.doReturn(false).when(jediService).delete(1);
 
+        mockMvc.perform(delete("/jedi/{id}", 1))
+                .andExpect(status().isInternalServerError());
+    }
 
     static String asJsonString(final Object obj) {
         try {
