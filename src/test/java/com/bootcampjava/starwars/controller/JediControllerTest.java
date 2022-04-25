@@ -106,6 +106,34 @@ public class JediControllerTest {
     }
 
     // TODO: Teste do PUT com sucesso
+    @Test
+    @DisplayName("PUT /jedi/1 - Update jedi com sucesso")
+    public void testUpdateJediWithSuccess() throws Exception {
+
+        Jedi newJedi = new Jedi("Leia", 10);
+
+        Jedi mockJedi = new Jedi(1, "Leia", 10, 1);
+
+        Mockito.doReturn(Optional.of(mockJedi)).when(jediService).findById(1);
+        Mockito.doReturn(true).when(jediService).update(Mockito.any());
+
+        mockMvc.perform(put("/jedi/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.IF_MATCH, 1)
+                .content(asJsonString(newJedi)))
+
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(header().string(HttpHeaders.ETAG, "\"2\""))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/jedi/1"))
+
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Leia")))
+                .andExpect(jsonPath("$.strength", is(10)))
+                .andExpect(jsonPath("$.version", is(2)));
+
+    }
 
     // TODO: Teste do PUT com uma versao igual da ja existente - deve retornar um conflito
 

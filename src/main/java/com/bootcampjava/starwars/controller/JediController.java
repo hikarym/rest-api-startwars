@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 @RestController
 public class JediController {
@@ -54,6 +55,41 @@ public class JediController {
         } catch (URISyntaxException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PutMapping("/jedi/{id}")
+    public ResponseEntity<?> updateProduct(@RequestBody Jedi jedi,
+                                           @PathVariable Integer id,
+                                           @RequestHeader("If-Match") Integer ifMatch) {
+
+        Optional<Jedi> existingJedi = jediService.findById(id);
+
+        return existingJedi.map(j -> {
+            if(!(j.getVersion() == ifMatch)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+
+            // Update product
+            j.setName(jedi.getName());
+            j.setStrength(j.getStrength());
+            j.setVersion(j.getVersion() + 1);
+
+            try {
+                // Update the product and return an ok response
+                if (jediService.update(j)) {
+                    return ResponseEntity.ok()
+                            .location(new URI("/jedi/" + j.getId()))
+                            .eTag(Integer.toString(j.getVersion()))
+                            .body(j);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } catch (URISyntaxException e) {
+                // An error occurred trying to create the location URI, return an error
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+
     }
 
 }
